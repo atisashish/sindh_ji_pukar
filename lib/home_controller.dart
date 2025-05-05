@@ -11,13 +11,17 @@ import 'package:sindh_ji_pukar/send_otp_model.dart';
 import 'package:sindh_ji_pukar/subscription_model.dart' as subscriptionModel;
 import 'package:sindh_ji_pukar/verify_otp_model.dart';
 
+import 'category_model.dart' as CategoryModel;
+
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isOtpLoading = false.obs;
   RxBool isSubscription = false.obs;
+  RxBool isCategory = false.obs;
   RxBool isAdsList = false.obs;
   RxList<subscriptionModel.Data> subscriptionList =
       <subscriptionModel.Data>[].obs;
+  RxList<CategoryModel.Data> categoryList = <CategoryModel.Data>[].obs;
   RxList<AdSizeModel.Data> adsList = <AdSizeModel.Data>[].obs;
 
   Future<void> checkAuthStatus() async {
@@ -89,7 +93,7 @@ class HomeController extends GetxController {
       AdSubscriptionModel user = await HomeService.addSubscription(body: body);
       isOtpLoading.value = false;
       if (user.success == true) {
-        submitAd(amount: amount);
+        // submitAd(amount: amount);
         AppFlushBar.success(Get.context!, message: user.message ?? "");
       } else {
         AppFlushBar.error(Get.context!, message: user.message);
@@ -114,7 +118,7 @@ class HomeController extends GetxController {
       );
       isOtpLoading.value = false;
       if (user.success == true) {
-        submitAd(amount: amount);
+        // submitAd(amount: amount);
         AppFlushBar.success(Get.context!, message: user.message ?? "");
       } else {
         AppFlushBar.error(Get.context!, message: user.message);
@@ -145,6 +149,25 @@ class HomeController extends GetxController {
       isSubscription.value = false;
     } finally {}
     return subscriptionModel.SubscriptionListModel();
+  }
+
+  Future<CategoryModel.CategoryModel> getCategory() async {
+    try {
+      isSubscription.value = true;
+      CategoryModel.CategoryModel user = await HomeService.getCategory();
+      isSubscription.value = false;
+      if (user.data != []) {
+        categoryList.value = user.data ?? [];
+        print("categoryList--->>${categoryList.value}");
+      } else {
+        AppFlushBar.error(Get.context!, message: "Something Went Wrong");
+      }
+      return user;
+    } catch (e, st) {
+      print("st--->>>$st");
+      isSubscription.value = false;
+    } finally {}
+    return CategoryModel.CategoryModel();
   }
 
   Future<AdSizeModel.AdSizeModel> getAdsList() async {
@@ -178,6 +201,7 @@ class HomeController extends GetxController {
   void onInit() {
     getSubscriptionList();
     getAdsList();
+    getCategory();
     super.onInit();
   }
 }

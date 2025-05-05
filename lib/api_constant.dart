@@ -8,6 +8,7 @@ class ApiConstants {
   static const String subscriptions = "subscriptions";
   static const String adSizes = "ad-sizes";
   static const String advertisements = "advertisements";
+  static const String categories = "categories";
 
   static String getParamsFromBody(Map<String, dynamic>? body) {
     String params = '?';

@@ -5,6 +5,7 @@ import 'package:sindh_ji_pukar/ad_advertized_model.dart';
 import 'package:sindh_ji_pukar/ad_size_model.dart';
 import 'package:sindh_ji_pukar/add_subscription_model.dart';
 import 'package:sindh_ji_pukar/api_constant.dart';
+import 'package:sindh_ji_pukar/category_model.dart';
 import 'package:sindh_ji_pukar/network_helper.dart';
 import 'package:sindh_ji_pukar/preference.dart';
 import 'package:sindh_ji_pukar/send_otp_model.dart';
@@ -126,6 +127,28 @@ class HomeService {
       //loader end
     }
     return SubscriptionListModel();
+  }
+
+  static Future<CategoryModel> getCategory() async {
+    try {
+      // String token = await SharedPrefs.getToken();
+      final request = await _networkAPICall.get(
+        ApiConstants.categories,
+        header: {
+          "Content-Type": "application/json",
+          // "Authorization": 'Bearer $token',
+        },
+      );
+      if (request != null) {
+        return CategoryModel.fromJson(request);
+      }
+    } catch (e) {
+      log("Discover log In Api Error $e");
+      rethrow;
+    } finally {
+      //loader end
+    }
+    return CategoryModel();
   }
 
   static Future<AdSizeModel> getAdsList() async {

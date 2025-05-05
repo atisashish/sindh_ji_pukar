@@ -495,7 +495,9 @@ class OTPScreen extends StatelessWidget {
 
 // 10. User Purpose Screen
 class UserPurposeScreen extends StatelessWidget {
-  const UserPurposeScreen({super.key});
+  UserPurposeScreen({super.key});
+
+  final HomeController homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -520,9 +522,10 @@ class UserPurposeScreen extends StatelessWidget {
 
               // Card for Reading News
               _buildPurposeCard(
-                icon: Icons.subscriptions,
-                title: 'News Subscription',
-                description: 'Subscription For News Paper',
+                icon: homeController.categoryList.value[0].image ?? "",
+                title: homeController.categoryList.value[0].title ?? "",
+                description:
+                    homeController.categoryList.value[0].description ?? "",
                 color: Colors.blue,
                 onTap: () => Get.to(() => AdSubmissionScreen()),
                 // onTap: () => Get.offAll(() => HomeScreen()),
@@ -531,9 +534,10 @@ class UserPurposeScreen extends StatelessWidget {
 
               // Card for Publishing Ads
               _buildPurposeCard(
-                icon: Icons.campaign,
-                title: 'Publish Advertisement',
-                description: 'Get Subscription For Advertisement',
+                icon: homeController.categoryList.value[1].image ?? "",
+                title: homeController.categoryList.value[1].title ?? "",
+                description:
+                    homeController.categoryList.value[1].description ?? "",
                 color: Colors.green,
                 onTap: () => Get.to(() => SubscribeScreen()),
               ),
@@ -545,7 +549,7 @@ class UserPurposeScreen extends StatelessWidget {
   }
 
   Widget _buildPurposeCard({
-    required IconData icon,
+    required String icon,
     required String title,
     required String description,
     required Color color,
@@ -562,7 +566,8 @@ class UserPurposeScreen extends StatelessWidget {
           width: double.infinity,
           child: Column(
             children: [
-              Icon(icon, size: 50, color: color),
+              CachedNetworkImage(imageUrl: icon, height: 50, width: 50),
+              // Icon(icon, size: 50, color: color),
               const SizedBox(height: 15),
               Text(
                 title,
@@ -604,8 +609,10 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
   final TextEditingController _contactController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _gstController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
   String _selectedPrice = '';
   String? _selectedPlanId = '';
+  String _selectedPaymentMethod = 'cod';
 
   @override
   void initState() {
@@ -714,15 +721,33 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
                   hintText: 'GST',
                   border: OutlineInputBorder(),
                 ),
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Please Provide GST Number';
+                //   }
+                //   return null;
+                // },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _numberController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
+                decoration: const InputDecoration(
+                  labelText: 'Mobile Number',
+                  hintText: 'Mobile Number',
+                  border: OutlineInputBorder(),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please Provide GST Number';
+                    return 'Please Enter Your Number';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-
               const Text(
                 'Subscription',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -782,6 +807,127 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 20),
+              const Text(
+                'Select Payment Method',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedPaymentMethod = 'cod';
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color:
+                              _selectedPaymentMethod == 'cod'
+                                  ? Colors.green[50]
+                                  : Colors.white,
+                          border: Border.all(
+                            color:
+                                _selectedPaymentMethod == 'cod'
+                                    ? Colors.green
+                                    : Colors.grey.shade300,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow:
+                              _selectedPaymentMethod == 'cod'
+                                  ? [
+                                    BoxShadow(
+                                      color: Colors.green.withOpacity(0.3),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                  : [],
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.local_shipping,
+                              size: 30,
+                              color: Colors.green,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Cash on Delivery',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color:
+                                    _selectedPaymentMethod == 'cod'
+                                        ? Colors.green
+                                        : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedPaymentMethod = 'online';
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color:
+                              _selectedPaymentMethod == 'online'
+                                  ? Colors.blue[50]
+                                  : Colors.white,
+                          border: Border.all(
+                            color:
+                                _selectedPaymentMethod == 'online'
+                                    ? Colors.blue
+                                    : Colors.grey.shade300,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow:
+                              _selectedPaymentMethod == 'online'
+                                  ? [
+                                    BoxShadow(
+                                      color: Colors.blue.withOpacity(0.3),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                  : [],
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(Icons.payment, size: 30, color: Colors.blue),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Online Payment',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color:
+                                    _selectedPaymentMethod == 'online'
+                                        ? Colors.blue
+                                        : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 60),
               Obx(
                 () =>
@@ -801,13 +947,21 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
                                   "address": _contactController.text,
                                   "email": _emailController.text,
                                   "gst": _gstController.text,
-                                  "phone": "9876543210",
+                                  "phone": _numberController.text,
                                   "planId": _selectedPlanId,
+                                  "paymentType": _selectedPaymentMethod,
                                 };
-                                homeController.addSubscription(
-                                  body: body,
-                                  amount: _selectedPrice,
-                                );
+                                if (_selectedPaymentMethod == 'cod') {
+                                  homeController.addSubscription(body: body);
+                                } else {
+                                  homeController.addSubscription(body: body);
+                                  Get.to(
+                                    () => PaymentScreen(
+                                      amount: _selectedPrice,
+                                      // advertisementData: body,
+                                    ),
+                                  );
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -2132,10 +2286,12 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _mobileNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _gstController = TextEditingController();
   String _selectedPlanId = '';
   String _adPricesSize = '';
+  String _selectedPaymentMethod = 'cod';
 
   @override
   void initState() {
@@ -2230,15 +2386,26 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                   hintText: 'GST',
                   border: OutlineInputBorder(),
                 ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _mobileNumberController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
+                decoration: const InputDecoration(
+                  labelText: 'Mobile Number',
+                  hintText: 'Mobile Number',
+                  border: OutlineInputBorder(),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please Provide GST Number';
+                    return 'Please Enter Your Number';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
-
               const Text(
                 'Advertised',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -2264,8 +2431,6 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                       );
                       _adPricesSize = selectedData.price.toString() ?? '';
                       _selectedPlanId = selectedData.sId ?? '';
-                      print('✅ Selected Price: $_adPricesSize');
-                      print('✅ Selected PlanId: $_selectedPlanId');
                     }
                   });
                 },
@@ -2299,11 +2464,133 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 20),
+
+              const Text(
+                'Select Payment Method',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedPaymentMethod = 'cod';
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color:
+                              _selectedPaymentMethod == 'cod'
+                                  ? Colors.green[50]
+                                  : Colors.white,
+                          border: Border.all(
+                            color:
+                                _selectedPaymentMethod == 'cod'
+                                    ? Colors.green
+                                    : Colors.grey.shade300,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow:
+                              _selectedPaymentMethod == 'cod'
+                                  ? [
+                                    BoxShadow(
+                                      color: Colors.green.withOpacity(0.3),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                  : [],
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.local_shipping,
+                              size: 30,
+                              color: Colors.green,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Cash on Delivery',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color:
+                                    _selectedPaymentMethod == 'cod'
+                                        ? Colors.green
+                                        : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedPaymentMethod = 'online';
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color:
+                              _selectedPaymentMethod == 'online'
+                                  ? Colors.blue[50]
+                                  : Colors.white,
+                          border: Border.all(
+                            color:
+                                _selectedPaymentMethod == 'online'
+                                    ? Colors.blue
+                                    : Colors.grey.shade300,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow:
+                              _selectedPaymentMethod == 'online'
+                                  ? [
+                                    BoxShadow(
+                                      color: Colors.blue.withOpacity(0.3),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                  : [],
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(Icons.payment, size: 30, color: Colors.blue),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Online Payment',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color:
+                                    _selectedPaymentMethod == 'online'
+                                        ? Colors.blue
+                                        : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
               Obx(
                 () =>
                     homeController.isOtpLoading.value
-                        ? Center(
+                        ? const Center(
                           child: CircularProgressIndicator(strokeWidth: 1),
                         )
                         : SizedBox(
@@ -2319,11 +2606,26 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                   "email": _emailController.text,
                                   "gst": _gstController.text,
                                   "adSizeId": _selectedPlanId,
+                                  "paymentType": _selectedPaymentMethod,
+                                  "phone": _mobileNumberController.text,
                                 };
-                                homeController.addAdvertisements(
-                                  body: body,
-                                  amount: _adPricesSize,
-                                );
+                                if (_selectedPaymentMethod == 'cod') {
+                                  homeController.addAdvertisements(
+                                    body: body,
+                                    amount: _adPricesSize,
+                                  );
+                                } else {
+                                  homeController.addAdvertisements(
+                                    body: body,
+                                    amount: _adPricesSize,
+                                  );
+                                  Get.to(
+                                    () => PaymentScreen(
+                                      amount: _adPricesSize,
+                                      // advertisementData: body,
+                                    ),
+                                  );
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
