@@ -851,14 +851,10 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
                         ),
                         child: Column(
                           children: [
-                            Icon(
-                              Icons.local_shipping,
-                              size: 30,
-                              color: Colors.green,
-                            ),
+                            Icon(Icons.money, size: 30, color: Colors.green),
                             const SizedBox(height: 8),
                             Text(
-                              'Cash on Delivery',
+                              'Cash',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color:
@@ -877,7 +873,7 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          _selectedPaymentMethod = 'online';
+                          _selectedPaymentMethod = 'upi';
                         });
                       },
                       child: AnimatedContainer(
@@ -885,19 +881,19 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color:
-                              _selectedPaymentMethod == 'online'
+                              _selectedPaymentMethod == 'upi'
                                   ? Colors.blue[50]
                                   : Colors.white,
                           border: Border.all(
                             color:
-                                _selectedPaymentMethod == 'online'
+                                _selectedPaymentMethod == 'upi'
                                     ? Colors.blue
                                     : Colors.grey.shade300,
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow:
-                              _selectedPaymentMethod == 'online'
+                              _selectedPaymentMethod == 'upi'
                                   ? [
                                     BoxShadow(
                                       color: Colors.blue.withOpacity(0.3),
@@ -916,7 +912,7 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color:
-                                    _selectedPaymentMethod == 'online'
+                                    _selectedPaymentMethod == 'upi'
                                         ? Colors.blue
                                         : Colors.black87,
                               ),
@@ -953,6 +949,7 @@ class _AdSubmissionScreenState extends State<AdSubmissionScreen> {
                                 };
                                 if (_selectedPaymentMethod == 'cod') {
                                   homeController.addSubscription(body: body);
+                                  Get.back();
                                 } else {
                                   homeController.addSubscription(body: body);
                                   Get.to(
@@ -2509,14 +2506,10 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                         ),
                         child: Column(
                           children: [
-                            Icon(
-                              Icons.local_shipping,
-                              size: 30,
-                              color: Colors.green,
-                            ),
+                            Icon(Icons.money, size: 30, color: Colors.green),
                             const SizedBox(height: 8),
                             Text(
-                              'Cash on Delivery',
+                              'Cash',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color:
@@ -2535,7 +2528,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          _selectedPaymentMethod = 'online';
+                          _selectedPaymentMethod = 'upi';
                         });
                       },
                       child: AnimatedContainer(
@@ -2543,19 +2536,19 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color:
-                              _selectedPaymentMethod == 'online'
+                              _selectedPaymentMethod == 'upi'
                                   ? Colors.blue[50]
                                   : Colors.white,
                           border: Border.all(
                             color:
-                                _selectedPaymentMethod == 'online'
+                                _selectedPaymentMethod == 'upi'
                                     ? Colors.blue
                                     : Colors.grey.shade300,
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow:
-                              _selectedPaymentMethod == 'online'
+                              _selectedPaymentMethod == 'upi'
                                   ? [
                                     BoxShadow(
                                       color: Colors.blue.withOpacity(0.3),
@@ -2574,7 +2567,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color:
-                                    _selectedPaymentMethod == 'online'
+                                    _selectedPaymentMethod == 'upi'
                                         ? Colors.blue
                                         : Colors.black87,
                               ),
@@ -2614,6 +2607,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                                     body: body,
                                     amount: _adPricesSize,
                                   );
+                                  Get.back();
                                 } else {
                                   homeController.addAdvertisements(
                                     body: body,

@@ -94,6 +94,7 @@ class HomeController extends GetxController {
       isOtpLoading.value = false;
       if (user.success == true) {
         // submitAd(amount: amount);
+        // Get.back();
         AppFlushBar.success(Get.context!, message: user.message ?? "");
       } else {
         AppFlushBar.error(Get.context!, message: user.message);
@@ -119,6 +120,7 @@ class HomeController extends GetxController {
       isOtpLoading.value = false;
       if (user.success == true) {
         // submitAd(amount: amount);
+        // Get.back();
         AppFlushBar.success(Get.context!, message: user.message ?? "");
       } else {
         AppFlushBar.error(Get.context!, message: user.message);
